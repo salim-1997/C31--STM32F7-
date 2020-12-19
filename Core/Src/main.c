@@ -21,10 +21,10 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "usb_host.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32746g_discovery.h"
+#include "stm32746g_discovery_lcd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -125,7 +125,7 @@ void StartDefaultTask(void const * argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+__HAL_DBGMCU_FREEZE_TIM6();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -168,6 +168,13 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
+  BSP_LCD_Init();
+  BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
+  BSP_LCD_Clear(LCD_COLOR_BLUE);
+  BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
+  BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
+  BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize()/2, "Hello World !!!", CENTER_MODE);
+
 while(1){
 	HAL_GPIO_TogglePin(GPIOI,GPIO_PIN_1);
 	HAL_Delay(250);
