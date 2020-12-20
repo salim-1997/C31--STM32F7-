@@ -218,6 +218,11 @@ void DMA2D_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+#include "stm32746g_discovery_audio.h"
+extern SAI_HandleTypeDef haudio_in_sai;
+ void AUDIO_IN_SAIx_DMAx_IRQHandler(void)
+ {
+	 HAL_DMA_IRQHandler(haudio_in_sai.hdmarx);
+ }
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "stm32746g_discovery.h"
 #include "stm32746g_discovery_lcd.h"
+#include "stm32746g_discovery_audio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,7 +116,21 @@ void StartDefaultTask(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define AUDIO_IN_SAMPLES 1600
+uint16_t audio_in_buffer[AUDIO_IN_SAMPLES * 2 ]; // L+R interleaved
 
+void BSP_AUDIO_IN_HalfTransfer_CallBack(void)
+{
+	BSP_LED_On(LED1);
+}
+void BSP_AUDIO_IN_TransferComplete_CallBack(void)
+{
+	BSP_LED_Off(LED1);
+}
+void BSP_AUDIO_IN_Error_CallBack(void)
+{
+
+}
 /* USER CODE END 0 */
 
 /**
@@ -175,8 +190,17 @@ __HAL_DBGMCU_FREEZE_TIM6();
   BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
   BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize()/2, "Hello World !!!", CENTER_MODE);
 
+  uint8_t ok;
+  ok = BSP_AUDIO_IN_Init(4800, 16, 2);
+  if (ok != AUDIO_OK){
+	  Error_Handler();
+  }
+  ok = BSP_AUDIO_IN_Record(audio_in_buffer, AUDIO_IN_SAMPLES);
+  if (ok != AUDIO_OK){
+  	  Error_Handler();
+    }
 while(1){
-	HAL_GPIO_TogglePin(GPIOI,GPIO_PIN_1);
+	//HAL_GPIO_TogglePin(GPIOI,GPIO_PIN_1);
 	HAL_Delay(250);
 }
   /* USER CODE END 2 */
