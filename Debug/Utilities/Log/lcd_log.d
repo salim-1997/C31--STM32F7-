@@ -1,7 +1,8 @@
-Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.o: \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.c \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- ../USB_HOST/Target/usbh_conf.h ../Core/Inc/main.h \
+Utilities/Log/lcd_log.o: ../Utilities/Log/lcd_log.c \
+ ../Utilities/Log/lcd_log.h ../Utilities/Log/lcd_log_conf.h \
+ ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h \
+ ../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h \
+ ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h \
@@ -50,43 +51,18 @@ Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.o: \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_hcd.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h \
- ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h \
- ../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h \
- ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery.h \
- ../Drivers/BSP/STM32746G-Discovery/../../../Utilities/Fonts/fonts.h \
- ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_audio.h \
- ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h \
- ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
- ../Utilities/Log/lcd_log.h ../Utilities/Log/lcd_log_conf.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/portmacro.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
- ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h
+ ../Drivers/BSP/STM32746G-Discovery/../../../Utilities/Fonts/fonts.h
 
-../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h:
+../Utilities/Log/lcd_log.h:
 
-../USB_HOST/Target/usbh_conf.h:
+../Utilities/Log/lcd_log_conf.h:
 
-../Core/Inc/main.h:
+../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h:
+
+../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h:
+
+../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
 
@@ -184,66 +160,6 @@ Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.o: \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h:
 
-../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h:
-
-../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h:
-
-../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.h:
-
 ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../../../Utilities/Fonts/fonts.h:
-
-../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_audio.h:
-
-../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h:
-
-../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h:
-
-../Utilities/Log/lcd_log.h:
-
-../Utilities/Log/lcd_log_conf.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-
-../Core/Inc/FreeRTOSConfig.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/portmacro.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
-
-../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h:
-
-../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h:
-
-../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h:
-
-../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h:
-
-../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h:

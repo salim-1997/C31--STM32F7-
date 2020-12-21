@@ -48,7 +48,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32xxx_eval_lcd.h" /* replace 'stm32xxx' with your EVAL board name, ex: stm324x9i_eval_lcd.h */
+#include "stm32746g_discovery_lcd.h" /* replace 'stm32xxx' with your EVAL board name, ex: stm324x9i_eval_lcd.h */
 #include <stdio.h>
 
 

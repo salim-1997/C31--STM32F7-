@@ -24,8 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32746g_discovery.h"
-#include "stm32746g_discovery_lcd.h"
-#include "stm32746g_discovery_audio.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -189,6 +188,12 @@ __HAL_DBGMCU_FREEZE_TIM6();
   BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
   BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
   BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize()/2, "Hello World !!!", CENTER_MODE);
+
+
+  LCD_LOG_Init();
+  LCD_LOG_SetHeader("Header");
+  LCD_LOG_SetFooter("Footer");
+  printf("\n hello World !! hello hello hello world \n ");
 
   uint8_t ok;
   ok = BSP_AUDIO_IN_Init(4800, 16, 2);

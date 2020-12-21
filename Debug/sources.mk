@@ -45,4 +45,5 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1 \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
 USB_HOST/App \
 USB_HOST/Target \
+Utilities/Log \
 
