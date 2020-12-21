@@ -29,12 +29,12 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
-#include "stm32746g_discovery_lcd.h"
-#include "stm32746g_discovery_audio.h"
-#include "lcd_log.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lcd_log.h"
+#include "stm32746g_discovery_lcd.h"
+#include "stm32746g_discovery_audio.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

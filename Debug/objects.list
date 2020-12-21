@@ -73,7 +73,7 @@
 "Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.o"
 "Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ioreq.o"
 "Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.o"
-"Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o"
+"Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.o"
 "Middlewares/Third_Party/FreeRTOS/Source/croutine.o"
 "Middlewares/Third_Party/FreeRTOS/Source/event_groups.o"
 "Middlewares/Third_Party/FreeRTOS/Source/list.o"

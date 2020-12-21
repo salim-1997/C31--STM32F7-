@@ -47,6 +47,7 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_hcd.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h \
+ ../Utilities/Log/lcd_log.h ../Utilities/Log/lcd_log_conf.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.h \
@@ -55,7 +56,6 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_audio.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
- ../Utilities/Log/lcd_log.h ../Utilities/Log/lcd_log_conf.h \
  ../Core/Inc/stm32f7xx_it.h
 
 ../Core/Inc/main.h:
@@ -156,6 +156,10 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h:
 
+../Utilities/Log/lcd_log.h:
+
+../Utilities/Log/lcd_log_conf.h:
+
 ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h:
@@ -171,9 +175,5 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h:
-
-../Utilities/Log/lcd_log.h:
-
-../Utilities/Log/lcd_log_conf.h:
 
 ../Core/Inc/stm32f7xx_it.h:

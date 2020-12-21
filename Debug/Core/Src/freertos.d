@@ -56,6 +56,7 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_hcd.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h \
+ ../Utilities/Log/lcd_log.h ../Utilities/Log/lcd_log_conf.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.h \
@@ -63,8 +64,7 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Drivers/BSP/STM32746G-Discovery/../../../Utilities/Fonts/fonts.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_audio.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h \
- ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
- ../Utilities/Log/lcd_log.h ../Utilities/Log/lcd_log_conf.h
+ ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -182,6 +182,10 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h:
 
+../Utilities/Log/lcd_log.h:
+
+../Utilities/Log/lcd_log_conf.h:
+
 ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../Components/rk043fn48h/rk043fn48h.h:
@@ -197,7 +201,3 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h:
-
-../Utilities/Log/lcd_log.h:
-
-../Utilities/Log/lcd_log_conf.h:

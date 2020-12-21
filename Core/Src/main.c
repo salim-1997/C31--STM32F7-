@@ -21,6 +21,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "usb_host.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32746g_discovery.h"
@@ -78,9 +79,28 @@ UART_HandleTypeDef huart6;
 
 SDRAM_HandleTypeDef hsdram1;
 
-osThreadId defaultTaskHandle;
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 4096 * 4
+};
 /* USER CODE BEGIN PV */
 
+osThreadId_t task1Handle;
+const osThreadAttr_t task1_attributes = {
+  .name = "Task1",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 4096
+};
+
+osThreadId_t task2Handle;
+const osThreadAttr_t task2_attributes = {
+  .name = "Task2",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 4096
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,7 +127,7 @@ static void MX_TIM8_Init(void);
 static void MX_TIM12_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART6_UART_Init(void);
-void StartDefaultTask(void const * argument);
+void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -130,6 +150,24 @@ void BSP_AUDIO_IN_Error_CallBack(void)
 {
 
 }
+void StartTask1(void *argument)
+{
+  /* Infinite loop */
+  for(;;)
+  {
+	  printf("\n This is the first task being displayed \n ");
+  }
+
+}
+void StartTask2(void *argument)
+{
+   /* Infinite loop */
+  for(;;)
+  {
+	  printf("\n Hier wird die zweite Task angezeigt \n ");;
+  }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -164,7 +202,7 @@ __HAL_DBGMCU_FREEZE_TIM6();
   MX_CRC_Init();
   MX_DCMI_Init();
   MX_DMA2D_Init();
-  //MX_ETH_Init();
+  MX_ETH_Init();
   MX_FMC_Init();
   MX_I2C1_Init();
   MX_I2C3_Init();
@@ -193,8 +231,7 @@ __HAL_DBGMCU_FREEZE_TIM6();
   LCD_LOG_Init();
   LCD_LOG_SetHeader("Header");
   LCD_LOG_SetFooter("Footer");
-  printf("\n hello World !! hello hello hello world \n ");
-
+#if 0
   uint8_t ok;
   ok = BSP_AUDIO_IN_Init(4800, 16, 2);
   if (ok != AUDIO_OK){
@@ -208,7 +245,11 @@ while(1){
 	//HAL_GPIO_TogglePin(GPIOI,GPIO_PIN_1);
 	HAL_Delay(250);
 }
+#endif
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -227,12 +268,13 @@ while(1){
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 4096);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* creation of defaultTask */
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  task1Handle = osThreadNew(StartTask1, NULL, &task1_attributes);
+  task2Handle = osThreadNew(StartTask2, NULL, &task2_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
@@ -493,7 +535,7 @@ static void MX_DMA2D_Init(void)
   */
 static void MX_ETH_Init(void)
 {
-
+ return;
   /* USER CODE BEGIN ETH_Init 0 */
 
   /* USER CODE END ETH_Init 0 */
@@ -1590,7 +1632,7 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+void StartDefaultTask(void *argument)
 {
   /* init code for USB_HOST */
   MX_USB_HOST_Init();
