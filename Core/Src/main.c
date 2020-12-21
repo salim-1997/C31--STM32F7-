@@ -98,8 +98,12 @@ const osThreadAttr_t task1_attributes = {
 osThreadId_t task2Handle;
 const osThreadAttr_t task2_attributes = {
   .name = "Task2",
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityAboveNormal,
   .stack_size = 4096
+};
+osMutexId_t mutexLCD;
+const osMutexAttr_t mutexLCD_attributes = {
+		.name = "mutexLCD"
 };
 /* USER CODE END PV */
 
@@ -154,8 +158,12 @@ void StartTask1(void *argument)
 {
   /* Infinite loop */
   for(;;)
-  {
-	  printf("\n This is the first task being displayed \n ");
+  {  if(osMutexAcquire(mutexLCD,osWaitForever) == osOK)
+        {
+	    printf("\n This is the first task being displayed \n ");
+	    osMutexRelease(mutexLCD);
+	    //osDelay(10);
+        }
   }
 
 }
@@ -164,7 +172,13 @@ void StartTask2(void *argument)
    /* Infinite loop */
   for(;;)
   {
-	  printf("\n Hier wird die zweite Task angezeigt \n ");;
+	 if(osMutexAcquire(mutexLCD,osWaitForever) == osOK)
+	    {
+
+	     printf("\n Hier wird die zweite Task angezeigt \n ");
+	     osMutexRelease(mutexLCD);
+        }
+	 for (volatile int i=0; i < 1000000 ; i++);
   }
 }
 
@@ -253,6 +267,10 @@ while(1){
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+  mutexLCD = osMutexNew (&mutexLCD_attributes);
+  if (mutexLCD == NULL){
+	  Error_Handler();
+  }
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -274,7 +292,13 @@ while(1){
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   task1Handle = osThreadNew(StartTask1, NULL, &task1_attributes);
+  if (task1Handle == NULL){
+	  Error_Handler();
+  }
   task2Handle = osThreadNew(StartTask2, NULL, &task2_attributes);
+  if (task2Handle == NULL){
+	  Error_Handler();
+  }
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
