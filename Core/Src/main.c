@@ -25,7 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32746g_discovery.h"
-
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,27 +83,31 @@ SDRAM_HandleTypeDef hsdram1;
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityBelowNormal,
   .stack_size = 4096 * 4
 };
 /* USER CODE BEGIN PV */
 
-osThreadId_t task1Handle;
-const osThreadAttr_t task1_attributes = {
-  .name = "Task1",
+osThreadId_t audioRecordingHandle;
+const osThreadAttr_t audioRecording_attributes = {
+  .name = "AudioRec",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
 };
 
-osThreadId_t task2Handle;
-const osThreadAttr_t task2_attributes = {
-  .name = "Task2",
-  .priority = (osPriority_t) osPriorityAboveNormal,
+osThreadId_t audioProcessingHandle;
+const osThreadAttr_t audioProcessing_attributes = {
+  .name = "AudioProc",
+  .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
 };
 osMutexId_t mutexLCD;
 const osMutexAttr_t mutexLCD_attributes = {
 		.name = "mutexLCD"
+};
+osMessageQueueId_t  audioQueue;
+const osMessageQueueAttr_t audioQueue_attributes = {
+		.name = "AudioQ"
 };
 /* USER CODE END PV */
 
@@ -139,47 +143,69 @@ void StartDefaultTask(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define AUDIO_IN_SAMPLES 1600
-uint16_t audio_in_buffer[AUDIO_IN_SAMPLES * 2 ]; // L+R interleaved
+#define AUDIO_IN_SAMPLES_RATE 16000
+#define AUDIO_IN_SAMPLES (AUDIO_IN_SAMPLES_RATE/10)
+int16_t audio_in_buffer[AUDIO_IN_SAMPLES*2]; // L+R interleaved
 
 void BSP_AUDIO_IN_HalfTransfer_CallBack(void)
 {
-	BSP_LED_On(LED1);
+	osStatus_t status = osMessageQueuePut(audioQueue, &audio_in_buffer[0] , 0 , 0);
+	if(status == osErrorResource){
+		//check documentation
+	}
+	else if (status != osOK){
+		Error_Handler();
+	}
 }
 void BSP_AUDIO_IN_TransferComplete_CallBack(void)
 {
-	BSP_LED_Off(LED1);
+	osStatus_t status = osMessageQueuePut(audioQueue, &audio_in_buffer[AUDIO_IN_SAMPLES/2] , 0 , 0);
+	if(status == osErrorResource){
+		//check documentation
+	}
+	else if (status != osOK){
+		Error_Handler();
+	}
 }
 void BSP_AUDIO_IN_Error_CallBack(void)
 {
 
 }
-void StartTask1(void *argument)
+void AudioRecordingFunction(void *argument)
 {
-  /* Infinite loop */
-  for(;;)
-  {  if(osMutexAcquire(mutexLCD,osWaitForever) == osOK)
-        {
-	    printf("\n This is the first task being displayed \n ");
-	    osMutexRelease(mutexLCD);
-	    //osDelay(10);
-        }
-  }
+	uint8_t ok;
+	  ok = BSP_AUDIO_IN_Init(AUDIO_IN_SAMPLES_RATE, 16, 2);
+	  if (ok != AUDIO_OK){
+		  Error_Handler();
+	  }
+	  ok = BSP_AUDIO_IN_Record(audio_in_buffer, AUDIO_IN_SAMPLES);
+	  if (ok != AUDIO_OK){
+	  	  Error_Handler();
+	    }
+	  osThreadSuspend(audioRecordingHandle);
 
 }
-void StartTask2(void *argument)
+void AudioProcessingFunction(void *argument)
 {
-   /* Infinite loop */
-  for(;;)
-  {
-	 if(osMutexAcquire(mutexLCD,osWaitForever) == osOK)
-	    {
+	for (;;){
+		static int16_t buffer[AUDIO_IN_SAMPLES*2/2];
+		osStatus_t status = osMessageQueueGet(audioQueue, &buffer[0], NULL, 1000);
+		if(status != osOK){
+			Error_Handler();
+		}
+		float sum = 0;
+		for (int i=0 ; i < AUDIO_IN_SAMPLES*2/2 ; ++i){
+			sum += buffer[i]*buffer[i];
+		}
+		float moyenne = sum / AUDIO_IN_SAMPLES*2/2;
 
-	     printf("\n Hier wird die zweite Task angezeigt \n ");
-	     osMutexRelease(mutexLCD);
-        }
-	 for (volatile int i=0; i < 1000000 ; i++);
-  }
+		float maxSignal = (1<<15)-1;
+		float maxMoyenne = maxSignal*maxSignal;
+
+		float dBFS = 10 * log10f(moyenne/maxMoyenne);
+		printf("dBFS= %4d\n", (int)dBFS);
+		BSP_LED_Toggle(LED1);
+	}
 }
 
 /* USER CODE END 0 */
@@ -245,21 +271,7 @@ __HAL_DBGMCU_FREEZE_TIM6();
   LCD_LOG_Init();
   LCD_LOG_SetHeader("Header");
   LCD_LOG_SetFooter("Footer");
-#if 0
-  uint8_t ok;
-  ok = BSP_AUDIO_IN_Init(4800, 16, 2);
-  if (ok != AUDIO_OK){
-	  Error_Handler();
-  }
-  ok = BSP_AUDIO_IN_Record(audio_in_buffer, AUDIO_IN_SAMPLES);
-  if (ok != AUDIO_OK){
-  	  Error_Handler();
-    }
-while(1){
-	//HAL_GPIO_TogglePin(GPIOI,GPIO_PIN_1);
-	HAL_Delay(250);
-}
-#endif
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -283,6 +295,10 @@ while(1){
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+  audioQueue = osMessageQueueNew(2, sizeof(audio_in_buffer)/2 , &audioQueue_attributes);
+  if (audioQueue == NULL){
+	  Error_Handler();
+  }
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -291,12 +307,12 @@ while(1){
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  task1Handle = osThreadNew(StartTask1, NULL, &task1_attributes);
-  if (task1Handle == NULL){
+  audioRecordingHandle = osThreadNew(&AudioRecordingFunction, NULL, &audioRecording_attributes);
+  if (audioRecordingHandle == NULL){
 	  Error_Handler();
   }
-  task2Handle = osThreadNew(StartTask2, NULL, &task2_attributes);
-  if (task2Handle == NULL){
+  audioProcessingHandle = osThreadNew(&AudioProcessingFunction, NULL, &audioProcessing_attributes);
+  if (audioProcessingHandle == NULL){
 	  Error_Handler();
   }
   /* USER CODE END RTOS_THREADS */
@@ -1698,7 +1714,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-
+while(1);
   /* USER CODE END Error_Handler_Debug */
 }
 
