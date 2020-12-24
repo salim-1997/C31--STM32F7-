@@ -1,7 +1,7 @@
 Middlewares/Third_Party/FreeRTOS/Source/list.o: \
  ../Middlewares/Third_Party/FreeRTOS/Source/list.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
+ ../Core/Inc/FreeRTOSConfig.h ../Core/Inc/TimeDoctor_FreeRTOS.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
@@ -12,6 +12,8 @@ Middlewares/Third_Party/FreeRTOS/Source/list.o: \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
 ../Core/Inc/FreeRTOSConfig.h:
+
+../Core/Inc/TimeDoctor_FreeRTOS.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
 

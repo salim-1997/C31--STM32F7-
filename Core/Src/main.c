@@ -26,6 +26,8 @@
 /* USER CODE BEGIN Includes */
 #include "stm32746g_discovery.h"
 #include <math.h>
+#include <stdio.h>
+#include "TimeDoctor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -207,6 +209,18 @@ void AudioProcessingFunction(void *argument)
 		BSP_LED_Toggle(LED1);
 	}
 }
+int myPutchar(int ch)
+{
+	HAL_UART_Transmit(&huart1, (uint8_t*)&ch, 1, HAL_MAX_DELAY);
+	return ch;
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	TimeDoctor_STOP();
+	// save output to UART1
+	TimeDoctor_SAVE(&myPutchar);
+}
 
 /* USER CODE END 0 */
 
@@ -272,6 +286,8 @@ __HAL_DBGMCU_FREEZE_TIM6();
   LCD_LOG_SetHeader("Header");
   LCD_LOG_SetFooter("Footer");
 
+
+  TimeDoctor_START();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -575,13 +591,13 @@ static void MX_DMA2D_Init(void)
   */
 static void MX_ETH_Init(void)
 {
- return;
+
   /* USER CODE BEGIN ETH_Init 0 */
 
   /* USER CODE END ETH_Init 0 */
 
   /* USER CODE BEGIN ETH_Init 1 */
-
+return;
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
   heth.Init.AutoNegotiation = ETH_AUTONEGOTIATION_ENABLE;
@@ -1608,6 +1624,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DCMI_PWR_EN_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : USER_BUTTON_Pin */
+  GPIO_InitStruct.Pin = USER_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(USER_BUTTON_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : LCD_INT_Pin */
   GPIO_InitStruct.Pin = LCD_INT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_EVT_RISING;
@@ -1658,6 +1680,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

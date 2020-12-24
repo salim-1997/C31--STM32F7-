@@ -62,7 +62,7 @@ Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.o: \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
+ ../Core/Inc/FreeRTOSConfig.h ../Core/Inc/TimeDoctor_FreeRTOS.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
@@ -205,6 +205,8 @@ Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.o: \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
 ../Core/Inc/FreeRTOSConfig.h:
+
+../Core/Inc/TimeDoctor_FreeRTOS.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
 

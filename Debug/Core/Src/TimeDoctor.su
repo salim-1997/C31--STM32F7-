@@ -1,0 +1,14 @@
+TimeDoctor.c:15:9:atomic_swap	40	static,ignoring_inline_asm
+TimeDoctor.c:27:5:lock_acquire	16	static,ignoring_inline_asm
+TimeDoctor.c:35:6:lock_release	16	static,ignoring_inline_asm
+TimeDoctor.c:51:6:TimeDoctor_START	24	static,ignoring_inline_asm
+TimeDoctor.c:64:6:TimeDoctor_STOP	24	static,ignoring_inline_asm
+TimeDoctor.c:71:6:TimeDoctor_SAVE	24	static
+TimeDoctor.c:87:6:TimeDoctor_UserAgentCreate	32	static,ignoring_inline_asm
+TimeDoctor.c:97:6:TimeDoctor_UserAgentBegin	32	static,ignoring_inline_asm
+TimeDoctor.c:106:6:TimeDoctor_UserAgentEnd	32	static,ignoring_inline_asm
+TimeDoctor.c:118:6:TimeDoctor_FlagCreate	32	static,ignoring_inline_asm
+TimeDoctor.c:128:6:TimeDoctor_Flag	32	static,ignoring_inline_asm
+TimeDoctor.c:138:6:TimeDoctor_AddString	32	static,ignoring_inline_asm
+TimeDoctor.c:148:6:TimeDoctor_AddNumber	32	static,ignoring_inline_asm
+TimeDoctor.c:158:6:TimeDoctor_AddColor	32	static,ignoring_inline_asm

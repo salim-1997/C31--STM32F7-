@@ -1,3 +1,5 @@
+"Core/Src/TimeDoctor.o"
+"Core/Src/TimeDoctor_FreeRTOS.o"
 "Core/Src/freertos.o"
 "Core/Src/main.o"
 "Core/Src/stm32f7xx_hal_msp.o"

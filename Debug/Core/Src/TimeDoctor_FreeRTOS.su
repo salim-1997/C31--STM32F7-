@@ -1,0 +1,13 @@
+TimeDoctor_FreeRTOS.c:23:6:TimeDoctor_CREATE	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:33:6:TimeDoctor_TASK_SWITCHED_IN	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:42:6:TimeDoctor_TASK_SWITCHED_OUT	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:51:6:TimeDoctor_TASK_DELETE	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:60:6:TimeDoctor_TASK_SUSPEND	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:69:6:TimeDoctor_TASK_RESUME	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:82:6:TimeDoctor_QUEUE_CREATE	32	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:94:6:Timedoctor_QUEUE_REGISTRY_ADD	16	static
+TimeDoctor_FreeRTOS.c:99:6:TimeDoctor_QUEUE_SEND	40	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:108:6:TimeDoctor_QUEUE_SEND_FROM_ISR	40	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:117:6:TimeDoctor_QUEUE_RECEIVE	40	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:126:6:TimeDoctor_QUEUE_RECEIVE_FROM_ISR	40	static,ignoring_inline_asm
+TimeDoctor_FreeRTOS.c:135:6:TimeDoctor_QUEUE_DELETE	32	static,ignoring_inline_asm

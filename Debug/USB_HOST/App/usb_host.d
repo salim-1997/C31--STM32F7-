@@ -61,7 +61,7 @@ USB_HOST/App/usb_host.o: ../USB_HOST/App/usb_host.c \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
+ ../Core/Inc/FreeRTOSConfig.h ../Core/Inc/TimeDoctor_FreeRTOS.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
@@ -206,6 +206,8 @@ USB_HOST/App/usb_host.o: ../USB_HOST/App/usb_host.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
 ../Core/Inc/FreeRTOSConfig.h:
+
+../Core/Inc/TimeDoctor_FreeRTOS.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
 
