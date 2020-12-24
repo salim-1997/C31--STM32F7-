@@ -187,26 +187,53 @@ void AudioRecordingFunction(void *argument)
 	  osThreadSuspend(audioRecordingHandle);
 
 }
+float calcdBFS(int16_t buffer[], int len){
+	float sum = 0;
+			for (int i=0 ; i < len ; i+=2){
+				sum += buffer[i]*buffer[i];
+			}
+			sum /=  len/2 ;
+			//float moyenne = sum / AUDIO_IN_SAMPLES*2/2;
+
+			float maxSignal = (1<<15)-1;
+			float maxMoyenne = maxSignal*maxSignal;
+
+			float dBFS = 10 * log10f(sum/maxMoyenne);
+
+	    return dBFS;
+}
 void AudioProcessingFunction(void *argument)
 {
+	int x = 0;
 	for (;;){
 		static int16_t buffer[AUDIO_IN_SAMPLES*2/2];
 		osStatus_t status = osMessageQueueGet(audioQueue, &buffer[0], NULL, 1000);
 		if(status != osOK){
 			Error_Handler();
 		}
-		float sum = 0;
-		for (int i=0 ; i < AUDIO_IN_SAMPLES*2/2 ; ++i){
-			sum += buffer[i]*buffer[i];
+		float dBFS_A = calcdBFS(&buffer[0], AUDIO_IN_SAMPLES*2/2);
+		float dBFS_B = calcdBFS(&buffer[1], AUDIO_IN_SAMPLES*2/2);
+		//printf("dBFS= %4d\n", (int)dBFS);
+		//BSP_LED_Toggle(LED1);
+		float min =-60;
+		float max =0;
+
+		int h_A = (int)(BSP_LCD_GetYSize()/2 * (dBFS_A-min)/(max-min));
+		if(h_A <= 0 ){
+			h_A = 1;
 		}
-		float moyenne = sum / AUDIO_IN_SAMPLES*2/2;
+		BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2,h_A);
 
-		float maxSignal = (1<<15)-1;
-		float maxMoyenne = maxSignal*maxSignal;
-
-		float dBFS = 10 * log10f(moyenne/maxMoyenne);
-		printf("dBFS= %4d\n", (int)dBFS);
-		BSP_LED_Toggle(LED1);
+		int h_B = (int)(BSP_LCD_GetYSize()/2 * (dBFS_B-min)/(max-min));
+		if(h_B <= 0 ){
+			h_B = 1;
+		}
+		BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2-h_B,h_B);
+		x++;
+		if(x == BSP_LCD_GetXSize()){
+			BSP_LCD_Clear(LCD_COLOR_GRAY);
+			x = 0;
+		}
 	}
 }
 int myPutchar(int ch)
@@ -276,15 +303,15 @@ __HAL_DBGMCU_FREEZE_TIM6();
   /* USER CODE BEGIN 2 */
   BSP_LCD_Init();
   BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
-  BSP_LCD_Clear(LCD_COLOR_BLUE);
+  BSP_LCD_Clear(LCD_COLOR_GRAY);
   BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
-  BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
+  BSP_LCD_SetBackColor(LCD_COLOR_GRAY);
   BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize()/2, "Hello World !!!", CENTER_MODE);
 
 
-  LCD_LOG_Init();
-  LCD_LOG_SetHeader("Header");
-  LCD_LOG_SetFooter("Footer");
+  //LCD_LOG_Init();
+  //LCD_LOG_SetHeader("Header");
+  //LCD_LOG_SetFooter("Footer");
 
 
   TimeDoctor_START();
