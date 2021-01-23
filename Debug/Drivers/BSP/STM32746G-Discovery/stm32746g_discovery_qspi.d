@@ -34,6 +34,7 @@ Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_qspi.o: \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_fmc.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c_ex.h \
+ ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_iwdg.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_ltdc.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_ltdc_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr.h \
@@ -118,6 +119,8 @@ Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_qspi.o: \
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c_ex.h:
+
+../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_iwdg.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_ltdc.h:
 

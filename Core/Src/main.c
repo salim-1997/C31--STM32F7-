@@ -58,6 +58,8 @@ ETH_HandleTypeDef heth;
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
 
+IWDG_HandleTypeDef hiwdg;
+
 LTDC_HandleTypeDef hltdc;
 
 QSPI_HandleTypeDef hqspi;
@@ -85,38 +87,45 @@ SDRAM_HandleTypeDef hsdram1;
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .priority = (osPriority_t) osPriorityBelowNormal,
-  .stack_size = 4096
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 1024 * 4
+};
+/* Definitions for defaulTask */
+osThreadId_t defaulTaskHandle;
+const osThreadAttr_t defaulTask_attributes = {
+  .name = "defaulTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 1024 * 4
 };
 /* USER CODE BEGIN PV */
 
-osThreadId_t audioRecordingHandle;
-const osThreadAttr_t audioRecording_attributes = {
+osThreadId_t audioRecordingHandle;// declaration of a new  thread : audio recording task
+const osThreadAttr_t audioRecording_attributes = { //creating the attributes for the audio recording thread
   .name = "AudioRec",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
 };
 
-osThreadId_t audioProcessingHandle;
-const osThreadAttr_t audioProcessing_attributes = {
+osThreadId_t audioProcessingHandle;//declaration of a new thread: the audio processing thread
+const osThreadAttr_t audioProcessing_attributes = {//creating the attributes for the audio processing thread
   .name = "AudioProc",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
 };
 
-osThreadId_t touchScreenHandle;// creating a new thread
-const osThreadAttr_t touchScreen_attributes = { //create thread attributes
+osThreadId_t touchScreenHandle;// deaclaration of a new thread: the touchscreen handling thread
+const osThreadAttr_t touchScreen_attributes = { //creating attributes for the thread
   .name = "touch",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
 };
 
-osMutexId_t mutexLCD;
-const osMutexAttr_t mutexLCD_attributes = {
+osMutexId_t mutexLCD;// declaration of a new motex object
+const osMutexAttr_t mutexLCD_attributes = {//creating the attributes of the mutex
 		.name = "mutexLCD"
 };
-osMessageQueueId_t  audioQueue;
-const osMessageQueueAttr_t audioQueue_attributes = {
+osMessageQueueId_t  audioQueue;//declaration of a new message queue
+const osMessageQueueAttr_t audioQueue_attributes = {//attributes of the message queue
 		.name = "AudioQ"
 };
 /* USER CODE END PV */
@@ -145,6 +154,7 @@ static void MX_TIM8_Init(void);
 static void MX_TIM12_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART6_UART_Init(void);
+static void MX_IWDG_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -210,7 +220,7 @@ float calcdBFS(int16_t buffer[], int len){
 
 	    return dBFS;
 }
-void AudioProcessingFunction(void *argument)
+void AudioProcessingFunction(void *argument)//the function for audio processing
 {
 	int x = 0;
 	for (;;){
@@ -248,7 +258,7 @@ void AudioProcessingFunction(void *argument)
 		}
 	}
 }
-void TouchScreenFunction(void *argument){
+void TouchScreenFunction(void *argument){//the function for the touchscreen thread
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 	for(;;){
 		TS_StateTypeDef state;
@@ -325,6 +335,7 @@ __HAL_DBGMCU_FREEZE_TIM6();
   MX_TIM12_Init();
   MX_USART1_UART_Init();
   MX_USART6_UART_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   BSP_LCD_Init();
   BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
@@ -372,6 +383,9 @@ __HAL_DBGMCU_FREEZE_TIM6();
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of defaulTask */
+  defaulTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaulTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -773,6 +787,35 @@ static void MX_I2C3_Init(void)
   /* USER CODE BEGIN I2C3_Init 2 */
 
   /* USER CODE END I2C3_Init 2 */
+
+}
+
+/**
+  * @brief IWDG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_IWDG_Init(void)
+{
+
+  /* USER CODE BEGIN IWDG_Init 0 */
+
+  /* USER CODE END IWDG_Init 0 */
+
+  /* USER CODE BEGIN IWDG_Init 1 */
+
+  /* USER CODE END IWDG_Init 1 */
+  hiwdg.Instance = IWDG;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
+  hiwdg.Init.Window = 4095;
+  hiwdg.Init.Reload = 2000;
+  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN IWDG_Init 2 */
+
+  /* USER CODE END IWDG_Init 2 */
 
 }
 
@@ -1764,7 +1807,8 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  HAL_IWDG_Refresh(&hiwdg);
+	  osDelay(100);
   }
   /* USER CODE END 5 */
 }
