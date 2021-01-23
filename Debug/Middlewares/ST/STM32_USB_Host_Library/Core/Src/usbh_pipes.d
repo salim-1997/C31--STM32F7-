@@ -60,6 +60,9 @@ Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.o: \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_audio.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
+ ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_ts.h \
+ ../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/ft5336.h \
+ ../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/../Common/ts.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h ../Core/Inc/TimeDoctor_FreeRTOS.h \
@@ -199,6 +202,12 @@ Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.o: \
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h:
+
+../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_ts.h:
+
+../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/ft5336.h:
+
+../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/../Common/ts.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 

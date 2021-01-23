@@ -35,6 +35,7 @@ extern "C" {
 #include "lcd_log.h"
 #include "stm32746g_discovery_lcd.h"
 #include "stm32746g_discovery_audio.h"
+#include "stm32746g_discovery_ts.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

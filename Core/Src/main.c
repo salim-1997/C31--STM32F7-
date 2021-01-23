@@ -86,7 +86,7 @@ osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .priority = (osPriority_t) osPriorityBelowNormal,
-  .stack_size = 4096 * 4
+  .stack_size = 4096
 };
 /* USER CODE BEGIN PV */
 
@@ -103,6 +103,14 @@ const osThreadAttr_t audioProcessing_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
 };
+
+osThreadId_t touchScreenHandle;// creating a new thread
+const osThreadAttr_t touchScreen_attributes = { //create thread attributes
+  .name = "touch",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 4096
+};
+
 osMutexId_t mutexLCD;
 const osMutexAttr_t mutexLCD_attributes = {
 		.name = "mutexLCD"
@@ -173,7 +181,7 @@ void BSP_AUDIO_IN_Error_CallBack(void)
 {
 
 }
-void AudioRecordingFunction(void *argument)
+void AudioRecordingFunction(void *argument) ///function of AudioReacording thread
 {
 	uint8_t ok;
 	  ok = BSP_AUDIO_IN_Init(AUDIO_IN_SAMPLES_RATE, 16, 2);
@@ -215,26 +223,43 @@ void AudioProcessingFunction(void *argument)
 		float dBFS_B = calcdBFS(&buffer[1], AUDIO_IN_SAMPLES*2/2);
 		//printf("dBFS= %4d\n", (int)dBFS);
 		//BSP_LED_Toggle(LED1);
-		float min =-60;
-		float max =0;
+		if (osMutexAcquire(mutexLCD, osWaitForever) == osOK){
+			float min =-60;
+			float max =0;
 
-		int h_A = (int)(BSP_LCD_GetYSize()/2 * (dBFS_A-min)/(max-min));
-		if(h_A <= 0 ){
-			h_A = 1;
-		}
-		BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2,h_A);
+			int h_A = (int)(BSP_LCD_GetYSize()/2 * (dBFS_A-min)/(max-min));
+			if(h_A <= 0 ){
+				h_A = 1;
+			}
+			BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
+			BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2,h_A);
 
-		int h_B = (int)(BSP_LCD_GetYSize()/2 * (dBFS_B-min)/(max-min));
-		if(h_B <= 0 ){
-			h_B = 1;
-		}
-		BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2-h_B,h_B);
-		x++;
-		if(x == BSP_LCD_GetXSize()){
-			BSP_LCD_Clear(LCD_COLOR_GRAY);
-			x = 0;
+			int h_B = (int)(BSP_LCD_GetYSize()/2 * (dBFS_B-min)/(max-min));
+			if(h_B <= 0 ){
+				h_B = 1;
+			}
+			BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2-h_B,h_B);
+			x++;
+			if(x == BSP_LCD_GetXSize()){
+				BSP_LCD_Clear(LCD_COLOR_GRAY);
+				x = 0;
+			}
+			osMutexRelease(mutexLCD);
 		}
 	}
+}
+void TouchScreenFunction(void *argument){
+	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+	for(;;){
+		TS_StateTypeDef state;
+		BSP_TS_GetState(&state);
+		if(osMutexAcquire(mutexLCD, osWaitForever)== osOK){
+			if ((state.touchDetected > 0) && (state.touchWeight[0]>0)){
+				BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+				BSP_LCD_FillCircle(state.touchX[0], state.touchY[0], state.touchWeight[0]);
+			}
+			osMutexRelease(mutexLCD);
+		}}
 }
 int myPutchar(int ch)
 {
@@ -358,6 +383,12 @@ __HAL_DBGMCU_FREEZE_TIM6();
   if (audioProcessingHandle == NULL){
 	  Error_Handler();
   }
+
+  touchScreenHandle = osThreadNew(&TouchScreenFunction, NULL, &touchScreen_attributes);
+    if (touchScreenHandle == NULL){
+  	  Error_Handler();
+    }
+
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */

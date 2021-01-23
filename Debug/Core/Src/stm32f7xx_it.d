@@ -56,6 +56,9 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
  ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_audio.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h \
  ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h \
+ ../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_ts.h \
+ ../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/ft5336.h \
+ ../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/../Common/ts.h \
  ../Core/Inc/stm32f7xx_it.h
 
 ../Core/Inc/main.h:
@@ -175,5 +178,11 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/wm8994.h:
 
 ../Drivers/BSP/STM32746G-Discovery/../Components/wm8994/../Common/audio.h:
+
+../Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_ts.h:
+
+../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/ft5336.h:
+
+../Drivers/BSP/STM32746G-Discovery/../Components/ft5336/../Common/ts.h:
 
 ../Core/Inc/stm32f7xx_it.h:
