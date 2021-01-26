@@ -111,7 +111,6 @@ const osThreadAttr_t audioProcessing_attributes = {//creating the attributes for
   .name = "AudioProc",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096
-};
 
 osThreadId_t touchScreenHandle;// deaclaration of a new thread: the touchscreen handling thread
 const osThreadAttr_t touchScreen_attributes = { //creating attributes for the thread
@@ -167,45 +166,45 @@ void StartDefaultTask(void *argument);
 #define AUDIO_IN_SAMPLES (AUDIO_IN_SAMPLES_RATE/10)
 int16_t audio_in_buffer[AUDIO_IN_SAMPLES*2]; // L+R interleaved
 
-void BSP_AUDIO_IN_HalfTransfer_CallBack(void)
+void BSP_AUDIO_IN_HalfTransfer_CallBack(void) // first interrupt for the first half buffer entry
 {
-	osStatus_t status = osMessageQueuePut(audioQueue, &audio_in_buffer[0] , 0 , 0);
-	if(status == osErrorResource){
+	osStatus_t status = osMessageQueuePut(audioQueue, &audio_in_buffer[0] , 0 , 0); // put the first half buffer in the Queue
+	if(status == osErrorResource){ // assigning the variable status to the osMessageQueue function is made to ensure a good transaction
+		//check documentation
+	}
+	else if (status != osOK){ // this one too
+		Error_Handler();
+	}
+}
+void BSP_AUDIO_IN_TransferComplete_CallBack(void) //interrupt for the second half of the buffer
+{
+	osStatus_t status = osMessageQueuePut(audioQueue, &audio_in_buffer[AUDIO_IN_SAMPLES/2] , 0 , 0);// put the second half buffer in the Queue
+	if(status == osErrorResource){//this procedure insure that in case of a problem we land in the interrrupt handler
 		//check documentation
 	}
 	else if (status != osOK){
 		Error_Handler();
 	}
 }
-void BSP_AUDIO_IN_TransferComplete_CallBack(void)
-{
-	osStatus_t status = osMessageQueuePut(audioQueue, &audio_in_buffer[AUDIO_IN_SAMPLES/2] , 0 , 0);
-	if(status == osErrorResource){
-		//check documentation
-	}
-	else if (status != osOK){
-		Error_Handler();
-	}
-}
-void BSP_AUDIO_IN_Error_CallBack(void)
+void BSP_AUDIO_IN_Error_CallBack(void) // this is the interrupt handler in case of an error in the audio callback
 {
 
 }
-void AudioRecordingFunction(void *argument) ///function of AudioReacording thread
+void AudioRecordingFunction(void *argument) //function of AudioReacording thread (this function explain how the audio recording procedure went)
 {
 	uint8_t ok;
-	  ok = BSP_AUDIO_IN_Init(AUDIO_IN_SAMPLES_RATE, 16, 2);
+	  ok = BSP_AUDIO_IN_Init(AUDIO_IN_SAMPLES_RATE, 16, 2);//we start by initializing the audio buffer
 	  if (ok != AUDIO_OK){
 		  Error_Handler();
 	  }
-	  ok = BSP_AUDIO_IN_Record(audio_in_buffer, AUDIO_IN_SAMPLES);
-	  if (ok != AUDIO_OK){
+	  ok = BSP_AUDIO_IN_Record(audio_in_buffer, AUDIO_IN_SAMPLES);// we start the audio recording with audio in buffer as the given buffer and the size is audio samples
+	  if (ok != AUDIO_OK){ // checking if everything ok
 	  	  Error_Handler();
 	    }
-	  osThreadSuspend(audioRecordingHandle);
+	  osThreadSuspend(audioRecordingHandle);// puts the task in a blocking sate
 
 }
-float calcdBFS(int16_t buffer[], int len){
+float calcdBFS(int16_t buffer[], int len){// this function is made to calculate the intering signals
 	float sum = 0;
 			for (int i=0 ; i < len ; i+=2){
 				sum += buffer[i]*buffer[i];
@@ -223,9 +222,9 @@ float calcdBFS(int16_t buffer[], int len){
 void AudioProcessingFunction(void *argument)//the function for audio processing
 {
 	int x = 0;
-	for (;;){
+	for (;;){ //endlosse Schleife
 		static int16_t buffer[AUDIO_IN_SAMPLES*2/2];
-		osStatus_t status = osMessageQueueGet(audioQueue, &buffer[0], NULL, 1000);
+		osStatus_t status = osMessageQueueGet(audioQueue, &buffer[0], NULL, 1000);//get the first element in the queue of audioqUeue from the buffer []
 		if(status != osOK){
 			Error_Handler();
 		}
@@ -233,16 +232,16 @@ void AudioProcessingFunction(void *argument)//the function for audio processing
 		float dBFS_B = calcdBFS(&buffer[1], AUDIO_IN_SAMPLES*2/2);
 		//printf("dBFS= %4d\n", (int)dBFS);
 		//BSP_LED_Toggle(LED1);
-		if (osMutexAcquire(mutexLCD, osWaitForever) == osOK){
-			float min =-60;
+		if (osMutexAcquire(mutexLCD, osWaitForever) == osOK){// to make any change in a source that can be controlled by more than two tasks , you have to wait until the mutex key is given
+			float min =-60;//... in this case the mutex that has to be controlled is the LCD andwe will osWaitforever untilwe get the key
 			float max =0;
 
 			int h_A = (int)(BSP_LCD_GetYSize()/2 * (dBFS_A-min)/(max-min));
 			if(h_A <= 0 ){
 				h_A = 1;
 			}
-			BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
-			BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2,h_A);
+			BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);// when drawing the line we will make it yellow
+			BSP_LCD_DrawVLine(x, BSP_LCD_GetYSize()/2,h_A);// we choose the x pos and y pos and lenght
 
 			int h_B = (int)(BSP_LCD_GetYSize()/2 * (dBFS_B-min)/(max-min));
 			if(h_B <= 0 ){
@@ -254,21 +253,21 @@ void AudioProcessingFunction(void *argument)//the function for audio processing
 				BSP_LCD_Clear(LCD_COLOR_GRAY);
 				x = 0;
 			}
-			osMutexRelease(mutexLCD);
+			osMutexRelease(mutexLCD);// at the end of the modifications given to the LCD , we nowcan give back the mutex key
 		}
 	}
 }
-void TouchScreenFunction(void *argument){//the function for the touchscreen thread
-	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+void TouchScreenFunction(void *argument){ //the function for the touchscreen thread
+	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());//initializing the size of the Touch screen
 	for(;;){
-		TS_StateTypeDef state;
-		BSP_TS_GetState(&state);
-		if(osMutexAcquire(mutexLCD, osWaitForever)== osOK){
-			if ((state.touchDetected > 0) && (state.touchWeight[0]>0)){
-				BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-				BSP_LCD_FillCircle(state.touchX[0], state.touchY[0], state.touchWeight[0]);
-			}
-			osMutexRelease(mutexLCD);
+		TS_StateTypeDef state; // creating a state for the touch screen
+		BSP_TS_GetState(&state); // constantly asking for the state
+		if(osMutexAcquire(mutexLCD, osWaitForever)== osOK){ // because the LCD can be acceed to by a defferent task, we made a a mutex , now we will be taking the key of mutex until we finish the modifications
+			if ((state.touchDetected > 0) && (state.touchWeight[0]>0)){// in case the attributes of state are changed to >0
+				BSP_LCD_SetTextColor(LCD_COLOR_WHITE);//change the color of the touched screen
+				BSP_LCD_FillCircle(state.touchX[0], state.touchY[0], state.touchWeight[0]);//and then make a circle
+				}
+			osMutexRelease(mutexLCD);// realese the mutex key againn
 		}}
 }
 int myPutchar(int ch)
@@ -337,6 +336,8 @@ __HAL_DBGMCU_FREEZE_TIM6();
   MX_USART6_UART_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
+
+  //code made for the LCD
   BSP_LCD_Init();
   BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
   BSP_LCD_Clear(LCD_COLOR_GRAY);
@@ -349,7 +350,7 @@ __HAL_DBGMCU_FREEZE_TIM6();
   //LCD_LOG_SetHeader("Header");
   //LCD_LOG_SetFooter("Footer");
 
-
+  //statrting the time Doctor
   TimeDoctor_START();
   /* USER CODE END 2 */
 
@@ -358,8 +359,8 @@ __HAL_DBGMCU_FREEZE_TIM6();
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
-  mutexLCD = osMutexNew (&mutexLCD_attributes);
-  if (mutexLCD == NULL){
+  mutexLCD = osMutexNew (&mutexLCD_attributes); // asigning the attributes to the mutex created oben
+  if (mutexLCD == NULL){ // checking if everything is going well
 	  Error_Handler();
   }
   /* USER CODE END RTOS_MUTEX */
@@ -389,16 +390,16 @@ __HAL_DBGMCU_FREEZE_TIM6();
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  audioRecordingHandle = osThreadNew(&AudioRecordingFunction, NULL, &audioRecording_attributes);
+  audioRecordingHandle = osThreadNew(&AudioRecordingFunction, NULL, &audioRecording_attributes); // starting the audio recording thread
   if (audioRecordingHandle == NULL){
 	  Error_Handler();
   }
-  audioProcessingHandle = osThreadNew(&AudioProcessingFunction, NULL, &audioProcessing_attributes);
+  audioProcessingHandle = osThreadNew(&AudioProcessingFunction, NULL, &audioProcessing_attributes); // starting the audio processing thread
   if (audioProcessingHandle == NULL){
 	  Error_Handler();
   }
 
-  touchScreenHandle = osThreadNew(&TouchScreenFunction, NULL, &touchScreen_attributes);
+  touchScreenHandle = osThreadNew(&TouchScreenFunction, NULL, &touchScreen_attributes); //starting the touch screen thread
     if (touchScreenHandle == NULL){
   	  Error_Handler();
     }
